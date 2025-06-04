@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client'
-import { GET_PRODUCTOS } from '../graphql/queries/productos'
+import { GET_PRODUCTOS_FILTRADOS } from '../graphql/queries/productosFiltrados'
 import {
   Box,
   Card,
@@ -12,9 +12,14 @@ import {
   Grid,
 } from '@mui/material'
 import Link from 'next/link'
+import { useState } from 'react'
+import CategoryFilter from './components/CategoryFilter'
 
 export default function HomePage() {
-  const { loading, error, data } = useQuery(GET_PRODUCTOS)
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('')
+  const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
+    variables: { categoria: categoriaSeleccionada || null },
+  })
 
   if (loading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
@@ -24,8 +29,11 @@ export default function HomePage() {
       <Typography variant="h4" gutterBottom>
         Productos en Oferta
       </Typography>
+
+      <CategoryFilter onChange={setCategoriaSeleccionada} />
+
       <Grid container spacing={2}>
-        {data.productos.map((p: any) => (
+        {data.productosFiltrados.map((p: any) => (
           <Grid key={p.id} size={{ xs: 12, md: 4 }}>
             <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
               <Card
