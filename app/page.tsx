@@ -14,6 +14,8 @@ import {
 import Link from 'next/link'
 import { useState } from 'react'
 import CategoryFilter from './components/CategoryFilter'
+import ProductCard from './components/ProductCard'
+
 
 export default function HomePage() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('')
@@ -34,33 +36,16 @@ export default function HomePage() {
 
       <Grid container spacing={2}>
         {data.productosFiltrados.map((p: any) => (
-          <Grid key={p.id} size={{ xs: 12, md: 4 }}>
-            <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.2s',
-                  '&:hover': { transform: 'scale(1.02)' },
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={p.urlImagen}
-                  alt={p.titulo}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div" noWrap>
-                    {p.titulo}
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    ${p.precioOferta?.toFixed(2)}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Link>
+          <Grid key={p.id} size={{ xs: 12, md: 3 }}>
+            <ProductCard
+              id={p.id}
+              titulo={p.titulo}
+              urlImagen={p.urlImagen}
+              precioOferta={p.precioOferta}
+              precioOriginal={p.precioOriginal}
+              descuento={p.descuento}
+            />
+
           </Grid>
         ))}
       </Grid>

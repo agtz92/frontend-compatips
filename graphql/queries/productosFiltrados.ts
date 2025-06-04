@@ -9,6 +9,8 @@ export const GET_PRODUCTOS_FILTRADOS = gql`
       titulo
       urlImagen
       precioOferta
+      precioOriginal
+      descuento
     }
   }
 `
