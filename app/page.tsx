@@ -2,63 +2,61 @@
 
 import { useQuery } from '@apollo/client'
 import { GET_PRODUCTOS } from '../graphql/queries/productos'
-import Link from 'next/link'
-
 import {
+  Box,
   Card,
   CardContent,
   CardMedia,
   Typography,
-  Grid,
   Container,
-  CircularProgress,
-  Box,
 } from '@mui/material'
+import Link from 'next/link'
 
 export default function HomePage() {
   const { loading, error, data } = useQuery(GET_PRODUCTOS)
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" mt={10}>
-        <CircularProgress />
-      </Box>
-    )
-  }
-
-  if (error) {
-    return <Typography color="error">Error: {error.message}</Typography>
-  }
+  if (loading) return <p>Cargando...</p>
+  if (error) return <p>Error: {error.message}</p>
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 5 }}>
+    <Container sx={{ py: 5 }}>
       <Typography variant="h4" gutterBottom>
-        Ofertas disponibles
+        Productos en Oferta
       </Typography>
-      <Grid container spacing={4}>
+      <Box
+        display="grid"
+        gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}
+        gap={3}
+      >
         {data.productos.map((p: any) => (
-          <Grid item key={p.id} xs={12} sm={6} md={4}>
-            <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardMedia
-                  component="img"
-                  image={p.urlImagen}
-                  alt={p.titulo}
-                  height="200"
-                />
-                <CardContent>
-                  <Typography variant="h6" component="h2" gutterBottom>
-                    {p.titulo.length > 60 ? p.titulo.slice(0, 60) + '…' : p.titulo}
-                  </Typography>
-                  <Typography variant="subtitle1" color="primary">
-                    ${p.precioOferta.toFixed(2)}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Link>
-          </Grid>
+          <Link key={p.id} href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
+            <Card
+              sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'transform 0.2s',
+                '&:hover': { transform: 'scale(1.02)' },
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="180"
+                image={p.urlImagen}
+                alt={p.titulo}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h6" component="div" noWrap>
+                  {p.titulo}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  ${p.precioOferta.toFixed(2)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
-      </Grid>
+      </Box>
     </Container>
   )
 }
