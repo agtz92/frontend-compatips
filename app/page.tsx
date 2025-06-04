@@ -15,13 +15,16 @@ import Link from 'next/link'
 import { useState } from 'react'
 import CategoryFilter from './components/CategoryFilter'
 import ProductCard from './components/ProductCard'
+import FilterBar from './components/FilterBar'
 
 
 export default function HomePage() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
   const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
-    variables: { categoria: categoriaSeleccionada },
+    variables: { categoria: categoriaSeleccionada, search: searchTerm, },
+
   })
 
 
@@ -34,9 +37,11 @@ export default function HomePage() {
         Productos en Oferta
       </Typography>
 
-      <CategoryFilter
-        value={categoriaSeleccionada}
-        onChange={setCategoriaSeleccionada}
+      <FilterBar
+        categoria={categoriaSeleccionada}
+        onCategoriaChange={setCategoriaSeleccionada}
+        search={searchTerm}
+        onSearchChange={setSearchTerm}
       />
 
       <Grid container spacing={2}>
