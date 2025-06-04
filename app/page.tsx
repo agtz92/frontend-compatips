@@ -8,8 +8,9 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Container,
+  Container
 } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import Link from 'next/link'
 
 export default function HomePage() {
@@ -20,43 +21,60 @@ export default function HomePage() {
 
   return (
     <Container sx={{ py: 5 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom textAlign="center">
         Productos en Oferta
       </Typography>
-      <Box
-        display="grid"
-        gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}
-        gap={3}
-      >
+
+      <Grid container spacing={4}>
         {data.productos.map((p: any) => (
-          <Link key={p.id} href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
-            <Card
-              sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'scale(1.02)' },
-              }}
-            >
-              <CardMedia
-                component="img"
-                height="180"
-                image={p.urlImagen}
-                alt={p.titulo}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="div" noWrap>
-                  {p.titulo}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  ${p.precioOferta.toFixed(2)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Link>
+          <Grid item xs={12} sm={6} md={4} lg={3}> key={p.id}>
+            <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
+              <Card
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'scale(1.03)' },
+                  boxShadow: 3,
+                  borderRadius: 2
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={p.urlImagen}
+                  alt={p.titulo}
+                  sx={{ objectFit: 'cover' }}
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="subtitle1"
+                    component="div"
+                    sx={{ fontWeight: 600, lineHeight: 1.3 }}
+                  >
+                    {p.titulo}
+                  </Typography>
+
+                  <Typography variant="body2" color="text.secondary">
+                    {p.precioOriginal !== undefined && (
+                      <>
+                        <s>${Number(p.precioOriginal).toFixed(2)}</s>{' '}
+                      </>
+                    )}
+                    {p.precioOferta !== undefined && (
+                      <strong style={{ color: '#d32f2f' }}>
+                        ${Number(p.precioOferta).toFixed(2)}
+                      </strong>
+                    )}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
+          </Grid>
         ))}
-      </Box>
+      </Grid>
     </Container>
   )
 }
