@@ -1,95 +1,64 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
+import { useQuery } from '@apollo/client'
+import { GET_PRODUCTOS } from '../graphql/queries/productos'
+import Link from 'next/link'
+
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Grid,
+  Container,
+  CircularProgress,
+  Box,
+} from '@mui/material'
+
+export default function HomePage() {
+  const { loading, error, data } = useQuery(GET_PRODUCTOS)
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" mt={10}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (error) {
+    return <Typography color="error">Error: {error.message}</Typography>
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    <Container maxWidth="lg" sx={{ mt: 5 }}>
+      <Typography variant="h4" gutterBottom>
+        Ofertas disponibles
+      </Typography>
+      <Grid container spacing={4}>
+        {data.productos.map((p: any) => (
+          <Grid item key={p.id} xs={12} sm={6} md={4}>
+            <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <CardMedia
+                  component="img"
+                  image={p.urlImagen}
+                  alt={p.titulo}
+                  height="200"
+                />
+                <CardContent>
+                  <Typography variant="h6" component="h2" gutterBottom>
+                    {p.titulo.length > 60 ? p.titulo.slice(0, 60) + '…' : p.titulo}
+                  </Typography>
+                  <Typography variant="subtitle1" color="primary">
+                    ${p.precioOferta.toFixed(2)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  )
 }
