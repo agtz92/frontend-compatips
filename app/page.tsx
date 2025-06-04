@@ -18,10 +18,12 @@ import ProductCard from './components/ProductCard'
 
 
 export default function HomePage() {
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('')
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string | null>(null)
+
   const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
-    variables: { categoria: categoriaSeleccionada || null },
+    variables: { categoria: categoriaSeleccionada },
   })
+
 
   if (loading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
@@ -32,7 +34,10 @@ export default function HomePage() {
         Productos en Oferta
       </Typography>
 
-      <CategoryFilter onChange={setCategoriaSeleccionada} />
+      <CategoryFilter
+        value={categoriaSeleccionada}
+        onChange={setCategoriaSeleccionada}
+      />
 
       <Grid container spacing={2}>
         {data.productosFiltrados.map((p: any) => (
