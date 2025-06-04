@@ -20,14 +20,14 @@ export default function HomePage() {
   if (error) return <p>Error: {error.message}</p>
 
   return (
-    <Container sx={{ py: 5 }}>
+    <Container >
       <Typography variant="h4" gutterBottom textAlign="center">
         Productos en Oferta
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {data.productos.map((p: any) => (
-          <Grid item xs={12} sm={6} md={4} lg={3}> key={p.id}>
+          <Grid item key={p.id} size={{ xs: 12, md: 4 }}>
             <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
               <Card
                 sx={{
