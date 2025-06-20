@@ -13,6 +13,7 @@ export const GET_PRODUCTO_POR_ID = gql`
       linkReferidos
       fecha
       categoria
+      esReciente
     }
   }
 `

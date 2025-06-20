@@ -3,6 +3,7 @@ import MuiThemeProvider from './theme-provider'
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import Providers from './providers'
+import ResponsiveNavbar from './components/ResponsiveNavbar'
 
 export const metadata: Metadata = {
   title: 'Compatips',
@@ -13,7 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
       <body>
-        <Providers><MuiThemeProvider>{children}</MuiThemeProvider></Providers>
+        <Providers><MuiThemeProvider><ResponsiveNavbar />{children}</MuiThemeProvider></Providers>
       </body>
     </html>
   )

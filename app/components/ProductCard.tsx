@@ -17,9 +17,10 @@ type Props = {
     precioOferta: number
     precioOriginal: number
     descuento: number
+    esReciente: boolean
 }
 
-export default function ProductCard({ id, titulo, urlImagen, precioOferta, precioOriginal, descuento }: Props) {
+export default function ProductCard({ id, titulo, urlImagen, precioOferta, precioOriginal, descuento, esReciente }: Props) {
     return (
         <Link href={`/producto/${id}`} style={{ textDecoration: 'none' }}>
             <Card

@@ -3,17 +3,11 @@
 import { useQuery } from '@apollo/client'
 import { GET_PRODUCTOS_FILTRADOS } from '../graphql/queries/productosFiltrados'
 import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
   Typography,
   Container,
   Grid,
 } from '@mui/material'
-import Link from 'next/link'
 import { useState } from 'react'
-import CategoryFilter from './components/CategoryFilter'
 import ProductCard from './components/ProductCard'
 import FilterBar from './components/FilterBar'
 
@@ -54,6 +48,7 @@ export default function HomePage() {
               precioOferta={p.precioOferta}
               precioOriginal={p.precioOriginal}
               descuento={p.descuento}
+              esReciente = {p.esReciente}
             />
 
           </Grid>
