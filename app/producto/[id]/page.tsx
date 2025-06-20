@@ -28,7 +28,7 @@ export default function ProductoDetalle() {
     if (!loading && data?.productoPorId?.esReciente && !cancelled) {
       setShowRedirect(true)
       const timeout = setTimeout(() => {
-        window.open(data.productoPorId.linkReferidos, '_blank')
+        window.location.href = data.productoPorId.linkReferidos
         setShowRedirect(false)
       }, 3000)
       return () => clearTimeout(timeout)

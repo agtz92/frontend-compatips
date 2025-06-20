@@ -10,23 +10,22 @@ import {
 import { useState } from 'react'
 import ProductCard from './components/ProductCard'
 import FilterBar from './components/FilterBar'
-
+import LoadingBackdrop from './components/LoadingBackdrop' // Importa el nuevo componente
 
 export default function HomePage() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
-    variables: { categoria: categoriaSeleccionada, search: searchTerm, },
-
+    variables: { categoria: categoriaSeleccionada, search: searchTerm },
   })
 
-
-  if (loading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
 
   return (
     <Container sx={{ py: 5 }}>
+      <LoadingBackdrop open={loading} /> {/* ← Aquí lo usas */}
+
       <Typography variant="h4" gutterBottom>
         Productos en Oferta
       </Typography>
@@ -39,7 +38,7 @@ export default function HomePage() {
       />
 
       <Grid container spacing={2}>
-        {data.productosFiltrados.map((p: any) => (
+        {data?.productosFiltrados.map((p: any) => (
           <Grid key={p.id} size={{ xs: 12, md: 3 }}>
             <ProductCard
               id={p.id}
@@ -48,9 +47,8 @@ export default function HomePage() {
               precioOferta={p.precioOferta}
               precioOriginal={p.precioOriginal}
               descuento={p.descuento}
-              esReciente = {p.esReciente}
+              esReciente={p.esReciente}
             />
-
           </Grid>
         ))}
       </Grid>
