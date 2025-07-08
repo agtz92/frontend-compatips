@@ -36,6 +36,10 @@ export default function TelegramInvitePage() {
           Unirme al canal
         </Button>
       </Box>
+      <Typography variant="body1" sx={{ mt: 4 }}>
+       O búscanos en canales de telegram como @ofertasperronas OFERTAS MAS PERRONAS 🔥🔥🔥
+      </Typography>
+      
     </Container>
   )
 }
