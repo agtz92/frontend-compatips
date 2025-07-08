@@ -17,7 +17,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
-    variables: { categoria: categoriaSeleccionada, search: searchTerm },
+    variables: { categoria: categoriaSeleccionada, search: searchTerm, ordenar_por: "-id", },
   })
 
   if (error) return <p>Error: {error.message}</p>
