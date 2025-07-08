@@ -11,6 +11,7 @@ import { useState } from 'react'
 import ProductCard from './components/ProductCard'
 import FilterBar from './components/FilterBar'
 import LoadingBackdrop from './components/LoadingBackdrop' // Importa el nuevo componente
+import NoOfertas from './components/NoOfertas'
 
 export default function HomePage() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string | null>(null)
@@ -51,6 +52,7 @@ export default function HomePage() {
             />
           </Grid>
         ))}
+        {data?.productosFiltrados?.length === 0 && <NoOfertas />}
       </Grid>
     </Container>
   )
