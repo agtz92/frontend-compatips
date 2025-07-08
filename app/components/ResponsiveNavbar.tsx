@@ -7,8 +7,7 @@ import { useState } from 'react'
 
 const navItems = [
   { text: 'Inicio', href: '/' },
-  { text: 'Grupos Telegram', href: '/' },
-  { text: 'Contacto', href: '/' },
+  { text: 'Grupos Telegram', href: '/telegram' },
 ]
 
 export default function ResponsiveNavbar() {
