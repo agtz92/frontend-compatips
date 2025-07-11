@@ -14,6 +14,7 @@ import RedirectBackdrop from '@/app/components/RedirectBackdrop'
 import ProductoCard from '@/app/components/producto/ProductoCard'
 import OfertaExpirada from '@/app/components/producto/OfertaExpirada'
 import ProductosRelacionados from '@/app/components/producto/ProductosRelacionados'
+import MetaProducto from '@/app/components/seo/MetaProducto'
 
 export default function ProductoDetalle() {
   const { id } = useParams()
@@ -49,30 +50,41 @@ export default function ProductoDetalle() {
 
   const p = data.productoPorId
 
+
+
   return (
-    <Container maxWidth="md" sx={{ mt: 5 }}>
-      {p.esReciente ? (
-        <>
-          <RedirectBackdrop
-            open={showRedirect && !cancelled}
-            message="Redirigiendo a producto en Amazon... Si no te redirige automáticamente, presiona el botón 'Comprar ahora'."
-            onCancel={() => setCancelled(true)}
+    <>
+      <MetaProducto
+        titulo={p.titulo}
+        descripcion={`Aprovecha ${p.descuento}% de descuento por tiempo limitado.`}
+        imagen={p.urlImagen}
+        precio={p.precioOferta}
+      />
+      <Container maxWidth="md" sx={{ mt: 5 }}>
+        {p.esReciente ? (
+          <>
+            <RedirectBackdrop
+              open={showRedirect && !cancelled}
+              message="Redirigiendo a producto en Amazon... Si no te redirige automáticamente, presiona el botón 'Comprar ahora'."
+              onCancel={() => setCancelled(true)}
+            />
+            <ProductoCard producto={p} />
+          </>
+        ) : (
+          <><OfertaExpirada
+            titulo={p.titulo}
+            urlImagen={p.urlImagen}
+            linkReferidos={p.linkReferidos}
+            precioOferta={p.precioOferta}
           />
-          <ProductoCard producto={p} />
-        </>
-      ) : (
-        <><OfertaExpirada
-          titulo={p.titulo}
-          urlImagen={p.urlImagen}
-          linkReferidos={p.linkReferidos}
-          precioOferta={p.precioOferta}
-        />
-          <ProductosRelacionados categoria={p.categoria}/>
-        </>
+            <ProductosRelacionados categoria={p.categoria} />
+          </>
 
 
 
-      )}
-    </Container>
+        )}
+      </Container>
+    </>
+
   )
 }
