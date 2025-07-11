@@ -11,6 +11,7 @@ export const GET_PRODUCTOS_FILTRADOS = gql`
       precioOferta
       precioOriginal
       descuento
+      esReciente
     }
   }
 `

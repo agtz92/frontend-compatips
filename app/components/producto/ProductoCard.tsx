@@ -62,7 +62,7 @@ export default function ProductoCard({ producto }: Props) {
           color="secondary"
           sx={{ mt: 3 }}
         >
-          Comprar ahora
+          Ver en la tienda
         </Button>
       </CardContent>
     </Card>

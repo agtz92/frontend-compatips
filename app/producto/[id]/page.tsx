@@ -10,7 +10,7 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material'
-import RedirectBackdrop from '@/app/components/RedirectBackdrop'
+//import RedirectBackdrop from '@/app/components/RedirectBackdrop'
 import ProductoCard from '@/app/components/producto/ProductoCard'
 import OfertaExpirada from '@/app/components/producto/OfertaExpirada'
 import ProductosRelacionados from '@/app/components/producto/ProductosRelacionados'
@@ -25,16 +25,16 @@ export default function ProductoDetalle() {
   const [showRedirect, setShowRedirect] = useState(false)
   const [cancelled, setCancelled] = useState(false)
 
-  useEffect(() => {
-    if (!loading && data?.productoPorId?.esReciente && !cancelled) {
-      setShowRedirect(true)
-      const timeout = setTimeout(() => {
-        window.location.href = data.productoPorId.linkReferidos
-        setShowRedirect(false)
-      }, 3000)
-      return () => clearTimeout(timeout)
-    }
-  }, [loading, data, cancelled])
+  // useEffect(() => {
+  //   if (!loading && data?.productoPorId?.esReciente && !cancelled) {
+  //     setShowRedirect(true)
+  //     const timeout = setTimeout(() => {
+  //       window.location.href = data.productoPorId.linkReferidos
+  //       setShowRedirect(false)
+  //     }, 3000)
+  //     return () => clearTimeout(timeout)
+  //   }
+  // }, [loading, data, cancelled])
 
   if (loading) {
     return (
@@ -63,11 +63,11 @@ export default function ProductoDetalle() {
       <Container maxWidth="md" sx={{ mt: 5 }}>
         {p.esReciente ? (
           <>
-            <RedirectBackdrop
+            {/* <RedirectBackdrop
               open={showRedirect && !cancelled}
               message="Redirigiendo a producto en Amazon... Si no te redirige automáticamente, presiona el botón 'Comprar ahora'."
               onCancel={() => setCancelled(true)}
-            />
+            /> */}
             <ProductoCard producto={p} />
           </>
         ) : (
