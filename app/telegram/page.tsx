@@ -37,7 +37,7 @@ export default function TelegramInvitePage() {
         </Button>
       </Box>
       <Typography variant="body1" sx={{ mt: 4 }}>
-       O búscanos en canales de telegram como @ofertasperronas OFERTAS MAS PERRONAS 🔥🔥🔥
+       O búscanos en canales de telegram como @ofertasperronas OFERTAS EN AMAZON 🔥🔥🔥
       </Typography>
       
     </Container>
