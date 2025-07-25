@@ -31,17 +31,17 @@ export default function ResponsiveNavbar() {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: '#351931' }}>
+      <AppBar position="static" sx={{ backgroundColor: '#B4E50D' }}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)} sx={{ display: { sm: 'none' }, mr: 2 }}>
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)} sx={{ display: { sm: 'none' }, mr: 2, color:"black" }}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 , color:"#000"}}>
             Compatips
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button key={item.text} color="inherit" component={Link} href={item.href}>
+              <Button key={item.text} color="inherit" component={Link} href={item.href} sx={{ color: 'black' }}>
                 {item.text}
               </Button>
             ))}

@@ -28,7 +28,10 @@ export default function HomePage() {
       <LoadingBackdrop open={loading} /> {/* ← Aquí lo usas */}
 
       <Typography variant="h4" gutterBottom>
-        Productos en Oferta
+        🔥🔥🔥 Productos en Oferta en Amazon 🔥🔥🔥
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        Encuentra los últimos productos escondidos en oferta en Amazon México listados aquí!
       </Typography>
 
       <FilterBar
