@@ -56,11 +56,11 @@ export default function ProductCard({ id, titulo, urlImagen, precioOferta, preci
                     </Typography>
                     <Box display="flex" alignItems="center" gap={1}>
                         <Typography variant="body1" color="text.primary" fontWeight="bold">
-                            ${precioOferta?.toFixed(2)}
+                            ${precioOferta?.toFixed(2)} MXN
                         </Typography>
                         {descuento > 0 && (
                             <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                ${precioOriginal?.toFixed(2)}
+                                ${precioOriginal?.toFixed(2)} MXN
                             </Typography>
                         )}
                     </Box>

@@ -39,13 +39,13 @@ export default function ProductoCard({ producto }: Props) {
           Categoría: <strong>{producto.categoria}</strong>
         </Typography>
         <Typography variant="body1">
-          Precio original: <s>${producto.precioOriginal.toFixed(2)}</s>
+          Precio original: <s>${producto.precioOriginal.toFixed(2)} MXN</s>
         </Typography>
         <Typography variant="body1">
           Descuento: {producto.descuento}%
         </Typography>
         <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-          Precio de oferta: ${producto.precioOferta.toFixed(2)}
+          Precio de oferta: ${producto.precioOferta.toFixed(2)} MXN
         </Typography>
         <Typography variant="body2" sx={{ mt: 2 }}>
           Fecha: {producto.fecha}
