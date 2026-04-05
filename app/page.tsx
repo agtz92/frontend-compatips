@@ -78,8 +78,8 @@ export default function HomePage() {
               label="Ofertas actualizadas diariamente"
               sx={{
                 mb: 2,
-                bgcolor: 'rgba(180, 229, 13, 0.15)',
-                color: '#B4E50D',
+                bgcolor: 'rgba(255, 153, 0, 0.15)',
+                color: '#FF9900',
                 fontWeight: 600,
                 fontSize: '0.85rem',
               }}
@@ -103,7 +103,7 @@ export default function HomePage() {
             </Typography>
             {allProducts.length > 0 && (
               <Chip
-                label={`${allProducts.length} ofertas disponibles`}
+                label={`${allProducts.length} ofertas activas`}
                 sx={{
                   bgcolor: 'rgba(255,255,255,0.1)',
                   color: 'rgba(255,255,255,0.8)',
@@ -158,15 +158,15 @@ export default function HomePage() {
               onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
               endIcon={<ExpandMoreIcon />}
               sx={{
-                borderColor: '#B4E50D',
-                color: '#B4E50D',
+                borderColor: '#FF9900',
+                color: '#FF9900',
                 fontWeight: 600,
                 px: 4,
                 py: 1.2,
                 borderRadius: 2,
                 textTransform: 'none',
                 fontSize: '1rem',
-                '&:hover': { borderColor: '#9ac40b', bgcolor: 'rgba(180, 229, 13, 0.08)' },
+                '&:hover': { borderColor: '#E68A00', bgcolor: 'rgba(255, 153, 0, 0.08)' },
               }}
             >
               Ver más ofertas

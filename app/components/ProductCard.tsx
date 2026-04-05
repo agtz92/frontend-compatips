@@ -97,7 +97,7 @@ export default function ProductCard({ id, titulo, urlImagen, precioOferta, preci
                                     ${precioOriginal?.toFixed(2)}
                                 </Typography>
                                 {ahorro > 0 && (
-                                    <Typography variant="caption" sx={{ color: '#B4E50D', fontWeight: 600 }}>
+                                    <Typography variant="caption" sx={{ color: '#FF9900', fontWeight: 600 }}>
                                         Ahorras ${ahorro.toFixed(0)}
                                     </Typography>
                                 )}
