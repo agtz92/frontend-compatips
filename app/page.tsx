@@ -20,52 +20,26 @@ const PAGE_SIZE = 20
 export default function HomePage() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [hasMore, setHasMore] = useState(true)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
-  const { loading, error, data, fetchMore } = useQuery(GET_PRODUCTOS_FILTRADOS, {
+  const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
     variables: {
       categoria: categoriaSeleccionada,
       search: searchTerm,
       ordenar_por: "-id",
-      limit: PAGE_SIZE,
-      offset: 0,
-    },
-    onCompleted: (result) => {
-      if (result?.productosFiltrados?.length < PAGE_SIZE) {
-        setHasMore(false)
-      } else {
-        setHasMore(true)
-      }
     },
   })
 
-  // Reset pagination when filters change
+  // Reset visible count when filters change
   useEffect(() => {
-    setHasMore(true)
+    setVisibleCount(PAGE_SIZE)
   }, [categoriaSeleccionada, searchTerm])
 
-  const handleLoadMore = () => {
-    const currentLength = data?.productosFiltrados?.length || 0
-    fetchMore({
-      variables: {
-        offset: currentLength,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev
-        if (fetchMoreResult.productosFiltrados.length < PAGE_SIZE) {
-          setHasMore(false)
-        }
-        return {
-          productosFiltrados: [
-            ...prev.productosFiltrados,
-            ...fetchMoreResult.productosFiltrados,
-          ],
-        }
-      },
-    })
-  }
-
   if (error) return <p>Error: {error.message}</p>
+
+  const allProducts = data?.productosFiltrados ?? []
+  const visibleProducts = allProducts.slice(0, visibleCount)
+  const hasMore = visibleCount < allProducts.length
 
   return (
     <Container sx={{ py: 5 }}>
@@ -86,7 +60,7 @@ export default function HomePage() {
       />
 
       <Grid container spacing={2}>
-        {data?.productosFiltrados.map((p: any) => (
+        {visibleProducts.map((p: any) => (
           <Grid key={p.id} size={{ xs: 12, md: 3 }}>
             <ProductCard
               id={p.id}
@@ -99,12 +73,12 @@ export default function HomePage() {
             />
           </Grid>
         ))}
-        {data?.productosFiltrados?.length === 0 && <NoOfertas />}
+        {allProducts.length === 0 && !loading && <NoOfertas />}
       </Grid>
 
-      {hasMore && data?.productosFiltrados?.length > 0 && (
+      {hasMore && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Button variant="contained" onClick={handleLoadMore}>
+          <Button variant="contained" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
             Ver más
           </Button>
         </Box>

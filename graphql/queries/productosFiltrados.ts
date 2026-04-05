@@ -3,8 +3,8 @@
 import { gql } from '@apollo/client'
 
 export const GET_PRODUCTOS_FILTRADOS = gql`
-  query ProductosFiltrados($categoria: String, $search: String, $ordenar_por: String, $limit: Int, $offset: Int) {
-    productosFiltrados(categoria: $categoria, search: $search, ordenarPor: $ordenar_por, limit: $limit, offset: $offset) {
+  query ProductosFiltrados($categoria: String, $search: String, $ordenar_por: String) {
+    productosFiltrados(categoria: $categoria, search: $search, ordenarPor: $ordenar_por) {
       id
       titulo
       urlImagen
