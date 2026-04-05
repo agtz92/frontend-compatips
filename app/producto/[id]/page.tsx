@@ -9,7 +9,9 @@ const PRODUCTO_QUERY = `
       titulo
       descuento
       precioOferta
+      precioOriginal
       urlImagen
+      categoria
     }
   }
 `
@@ -61,5 +63,34 @@ export default async function ProductoDetalle({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  return <ProductoDetalleClient id={id} />
+  const p = await fetchProducto(id)
+
+  const jsonLd = p
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: p.titulo,
+        image: p.urlImagen,
+        category: p.categoria,
+        offers: {
+          '@type': 'Offer',
+          price: p.precioOferta,
+          priceCurrency: 'MXN',
+          availability: 'https://schema.org/InStock',
+          discount: `${p.descuento}%`,
+        },
+      }
+    : null
+
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <ProductoDetalleClient id={id} />
+    </>
+  )
 }
