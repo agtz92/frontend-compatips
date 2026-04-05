@@ -1,0 +1,26 @@
+# Compatips
+
+> Encuentra los mejores productos escondidos en oferta en Amazon México. Descuentos actualizados diariamente.
+
+Compatips es un sitio web que recopila y muestra productos en oferta en Amazon México. Los usuarios pueden filtrar por categoría, buscar productos específicos y ver detalles de cada oferta incluyendo precio original, precio de oferta y porcentaje de descuento.
+
+## Páginas principales
+
+- [Inicio](https://www.compatips.com): Listado de productos en oferta con filtros por categoría y búsqueda.
+- [Telegram](https://www.compatips.com/telegram): Invitación al canal de Telegram @ofertasperronas con ofertas diarias.
+- [Producto](https://www.compatips.com/producto/{id}): Detalle de cada producto con precio, descuento, imagen y enlace a Amazon.
+
+## Datos de productos
+
+Cada producto incluye:
+- Título
+- Precio original y precio de oferta (MXN)
+- Porcentaje de descuento
+- Imagen del producto
+- Categoría
+- Fecha de publicación
+- Estado (reciente o expirado)
+
+## Contacto
+
+- Telegram: [@ofertasperronas](https://t.me/ofertasperronas)
