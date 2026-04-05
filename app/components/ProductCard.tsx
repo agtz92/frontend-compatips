@@ -8,6 +8,8 @@ import {
     Chip,
     Box,
 } from '@mui/material'
+import WhatshotIcon from '@mui/icons-material/Whatshot'
+import BoltIcon from '@mui/icons-material/Bolt'
 import Link from 'next/link'
 
 type Props = {
@@ -20,8 +22,9 @@ type Props = {
     esReciente: boolean
 }
 
-export default function ProductCard({ id, titulo, urlImagen, precioOferta, precioOriginal, descuento }: Props) {
+export default function ProductCard({ id, titulo, urlImagen, precioOferta, precioOriginal, descuento, esReciente }: Props) {
     const ahorro = precioOriginal - precioOferta
+    const isHotDeal = descuento >= 25
 
     return (
         <Link href={`/producto/${id}`} style={{ textDecoration: 'none' }}>
@@ -35,30 +38,47 @@ export default function ProductCard({ id, titulo, urlImagen, precioOferta, preci
                     borderRadius: 3,
                     overflow: 'hidden',
                     transition: 'transform 0.2s, box-shadow 0.2s',
+                    borderColor: isHotDeal ? 'rgba(255, 153, 0, 0.4)' : undefined,
                     '&:hover': {
                         transform: 'translateY(-4px)',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                        boxShadow: isHotDeal
+                            ? '0 8px 24px rgba(255, 153, 0, 0.2)'
+                            : '0 8px 24px rgba(0,0,0,0.15)',
                     },
                 }}
             >
-                {/* Discount badge */}
-                {descuento > 0 && (
-                    <Box sx={{ position: 'absolute', top: 8, left: 8, zIndex: 1 }}>
+                {/* Top badges */}
+                <Box sx={{ position: 'absolute', top: 8, left: 8, zIndex: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    {descuento > 0 && (
                         <Chip
                             label={`-${descuento}%`}
+                            icon={isHotDeal ? <WhatshotIcon sx={{ fontSize: 16 }} /> : undefined}
                             sx={{
-                                bgcolor: '#E53935',
-                                color: 'white',
+                                bgcolor: isHotDeal ? '#FF9900' : '#E53935',
+                                color: isHotDeal ? '#111' : 'white',
                                 fontWeight: 700,
                                 fontSize: '0.8rem',
                             }}
                             size="small"
                         />
-                    </Box>
-                )}
+                    )}
+                    {esReciente && (
+                        <Chip
+                            label="Nuevo"
+                            icon={<BoltIcon sx={{ fontSize: 14 }} />}
+                            sx={{
+                                bgcolor: 'rgba(255, 153, 0, 0.15)',
+                                color: '#FF9900',
+                                fontWeight: 600,
+                                fontSize: '0.7rem',
+                            }}
+                            size="small"
+                        />
+                    )}
+                </Box>
 
                 {/* Image with white background */}
-                <Box sx={{ bgcolor: 'white', p: 1 }}>
+                <Box sx={{ bgcolor: 'white', p: 1, position: 'relative' }}>
                     <CardMedia
                         component="img"
                         image={urlImagen}
@@ -68,6 +88,24 @@ export default function ProductCard({ id, titulo, urlImagen, precioOferta, preci
                             objectFit: 'contain',
                         }}
                     />
+                    {/* Urgency ribbon for hot deals */}
+                    {isHotDeal && (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                bgcolor: 'rgba(255, 153, 0, 0.9)',
+                                py: 0.3,
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Typography variant="caption" sx={{ color: '#111', fontWeight: 700, fontSize: '0.65rem', letterSpacing: 1, textTransform: 'uppercase' }}>
+                                Oferta por tiempo limitado
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
 
                 <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 1.5, '&:last-child': { pb: 1.5 } }}>
@@ -92,13 +130,13 @@ export default function ProductCard({ id, titulo, urlImagen, precioOferta, preci
                             ${precioOferta?.toFixed(2)}
                         </Typography>
                         {descuento > 0 && (
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.3 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.3, flexWrap: 'wrap' }}>
                                 <Typography variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
                                     ${precioOriginal?.toFixed(2)}
                                 </Typography>
                                 {ahorro > 0 && (
-                                    <Typography variant="caption" sx={{ color: '#FF9900', fontWeight: 600 }}>
-                                        Ahorras ${ahorro.toFixed(0)}
+                                    <Typography variant="caption" sx={{ color: '#FF9900', fontWeight: 700 }}>
+                                        -${ahorro.toFixed(0)} MXN
                                     </Typography>
                                 )}
                             </Box>
