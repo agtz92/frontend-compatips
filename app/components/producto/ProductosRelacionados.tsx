@@ -15,7 +15,7 @@ import Link from 'next/link'
 
 export default function ProductosRelacionados({ categoria }: { categoria: string }) {
     const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
-        variables: { categoria },
+        variables: { categoria, ordenar_por: "-id" },
     })
 
     if (loading || error || !data?.productosFiltrados) return null

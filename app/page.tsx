@@ -8,7 +8,9 @@ import {
   Grid,
   Button,
   Box,
+  Paper,
 } from '@mui/material'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import { useState, useEffect } from 'react'
 import ProductCard from './components/ProductCard'
 import FilterBar from './components/FilterBar'
@@ -35,7 +37,22 @@ export default function HomePage() {
     setVisibleCount(PAGE_SIZE)
   }, [categoriaSeleccionada, searchTerm])
 
-  if (error) return <p>Error: {error.message}</p>
+  if (error) return (
+    <Container sx={{ py: 8 }}>
+      <Paper elevation={3} sx={{ p: 4, textAlign: 'center', borderRadius: 4, maxWidth: 500, mx: 'auto' }}>
+        <ErrorOutlineIcon sx={{ fontSize: 60, color: 'error.main', mb: 2 }} />
+        <Typography variant="h5" gutterBottom>
+          Error al cargar ofertas
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          No pudimos conectar con el servidor. Intenta recargar la página.
+        </Typography>
+        <Button variant="contained" onClick={() => window.location.reload()}>
+          Reintentar
+        </Button>
+      </Paper>
+    </Container>
+  )
 
   const allProducts = data?.productosFiltrados ?? []
   const visibleProducts = allProducts.slice(0, visibleCount)

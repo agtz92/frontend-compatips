@@ -1,90 +1,65 @@
-'use client'
+import type { Metadata } from 'next'
+import ProductoDetalleClient from './ProductoDetalleClient'
 
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
-import { useQuery } from '@apollo/client'
-import { GET_PRODUCTO_POR_ID } from '../../../graphql/queries/productoPorId'
-import {
-  Box,
-  Container,
-  Typography,
-  CircularProgress,
-} from '@mui/material'
-//import RedirectBackdrop from '@/app/components/RedirectBackdrop'
-import ProductoCard from '@/app/components/producto/ProductoCard'
-import OfertaExpirada from '@/app/components/producto/OfertaExpirada'
-import ProductosRelacionados from '@/app/components/producto/ProductosRelacionados'
-import MetaProducto from '@/app/components/seo/MetaProducto'
+const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:8000/graphql/'
 
-export default function ProductoDetalle() {
-  const { id } = useParams()
-  const { loading, error, data } = useQuery(GET_PRODUCTO_POR_ID, {
-    variables: { id },
-  })
+const PRODUCTO_QUERY = `
+  query GetProducto($id: ID!) {
+    productoPorId(id: $id) {
+      titulo
+      descuento
+      precioOferta
+      urlImagen
+    }
+  }
+`
 
-  const [showRedirect, setShowRedirect] = useState(false)
-  const [cancelled, setCancelled] = useState(false)
+async function fetchProducto(id: string) {
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: PRODUCTO_QUERY, variables: { id } }),
+      next: { revalidate: 60 },
+    })
+    const json = await res.json()
+    return json.data?.productoPorId ?? null
+  } catch {
+    return null
+  }
+}
 
-  // useEffect(() => {
-  //   if (!loading && data?.productoPorId?.esReciente && !cancelled) {
-  //     setShowRedirect(true)
-  //     const timeout = setTimeout(() => {
-  //       window.location.href = data.productoPorId.linkReferidos
-  //       setShowRedirect(false)
-  //     }, 3000)
-  //     return () => clearTimeout(timeout)
-  //   }
-  // }, [loading, data, cancelled])
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const p = await fetchProducto(id)
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" mt={10}>
-        <CircularProgress />
-      </Box>
-    )
+  if (!p) {
+    return { title: 'Producto no encontrado | Compatips' }
   }
 
-  if (error || !data?.productoPorId) {
-    return <Typography color="error">Producto no encontrado.</Typography>
+  const title = `${p.titulo} | Producto en oferta`
+  const description = `Aprovecha ${p.descuento}% de descuento por tiempo limitado. Precio: $${p.precioOferta} MXN`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [p.urlImagen],
+    },
   }
+}
 
-  const p = data.productoPorId
-
-
-
-  return (
-    <>
-      <MetaProducto
-        titulo={p.titulo}
-        descripcion={`Aprovecha ${p.descuento}% de descuento por tiempo limitado.`}
-        imagen={p.urlImagen}
-        precio={p.precioOferta}
-      />
-      <Container maxWidth="md" sx={{ mt: 5 }}>
-        {p.esReciente ? (
-          <>
-            {/* <RedirectBackdrop
-              open={showRedirect && !cancelled}
-              message="Redirigiendo a producto en Amazon... Si no te redirige automáticamente, presiona el botón 'Comprar ahora'."
-              onCancel={() => setCancelled(true)}
-            /> */}
-            <ProductoCard producto={p} />
-          </>
-        ) : (
-          <><OfertaExpirada
-            titulo={p.titulo}
-            urlImagen={p.urlImagen}
-            linkReferidos={p.linkReferidos}
-            precioOferta={p.precioOferta}
-          />
-            <ProductosRelacionados categoria={p.categoria} />
-          </>
-
-
-
-        )}
-      </Container>
-    </>
-
-  )
+export default async function ProductoDetalle({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  return <ProductoDetalleClient id={id} />
 }
