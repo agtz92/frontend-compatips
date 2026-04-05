@@ -11,7 +11,10 @@ import {
   Grid,
   Button,
   Box,
+  InputAdornment,
 } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+import ClearIcon from '@mui/icons-material/Clear'
 import { useState, useEffect } from 'react'
 
 type Props = {
@@ -66,16 +69,17 @@ export default function FilterBar({
   if (loading || !data) return null
 
   return (
-    <Grid container spacing={2} sx={{ mb: 2 }}>
-      <Grid size={{ xs: 12, md: 6 }}>
+    <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid size={{ xs: 12, md: 5 }}>
         <FormControl fullWidth>
           <InputLabel>Categoría</InputLabel>
           <Select
             value={categoria ?? ''}
             label="Categoría"
             onChange={handleCategoriaChange}
+            sx={{ borderRadius: 2 }}
           >
-            <MenuItem value="">Todas</MenuItem>
+            <MenuItem value="">Todas las categorías</MenuItem>
             {data.categoriasUnicas.map((cat: string) => (
               <MenuItem key={cat} value={cat}>
                 {cat}
@@ -85,22 +89,33 @@ export default function FilterBar({
         </FormControl>
       </Grid>
 
-      <Grid size={{ xs: 12, md: 6 }}>
+      <Grid size={{ xs: 12, md: 7 }}>
         <Box display="flex" gap={1}>
           <TextField
             fullWidth
-            label="Busca el producto y da enter"
+            placeholder="Buscar producto..."
             value={localSearch}
             onChange={handleSearchInputChange}
             onKeyDown={handleKeyDown}
             variant="outlined"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="action" />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
           />
           {filtrosActivos && (
             <Button
               variant="outlined"
               color="secondary"
               onClick={handleClearFilters}
-              sx={{ whiteSpace: 'nowrap' }}
+              sx={{ whiteSpace: 'nowrap', borderRadius: 2, minWidth: 'auto', px: 2 }}
+              startIcon={<ClearIcon />}
             >
               Limpiar
             </Button>

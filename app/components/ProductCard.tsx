@@ -20,51 +20,90 @@ type Props = {
     esReciente: boolean
 }
 
-export default function ProductCard({ id, titulo, urlImagen, precioOferta, precioOriginal, descuento, esReciente }: Props) {
+export default function ProductCard({ id, titulo, urlImagen, precioOferta, precioOriginal, descuento }: Props) {
+    const ahorro = precioOriginal - precioOferta
+
     return (
         <Link href={`/producto/${id}`} style={{ textDecoration: 'none' }}>
             <Card
+                variant="outlined"
                 sx={{
                     position: 'relative',
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    transition: 'transform 0.2s',
-                    '&:hover': { transform: 'scale(1.02)' },
+                    borderRadius: 3,
+                    overflow: 'hidden',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    },
                 }}
             >
-                {/* Descuento */}
+                {/* Discount badge */}
                 {descuento > 0 && (
-                    <Box sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}>
+                    <Box sx={{ position: 'absolute', top: 8, left: 8, zIndex: 1 }}>
                         <Chip
                             label={`-${descuento}%`}
-                            sx={{ backgroundColor: 'red', color: 'white', fontWeight: '400' }}
+                            sx={{
+                                bgcolor: '#E53935',
+                                color: 'white',
+                                fontWeight: 700,
+                                fontSize: '0.8rem',
+                            }}
                             size="small"
                         />
                     </Box>
                 )}
 
-                <CardMedia
-                    component="img"
-                    height="180"
-                    image={urlImagen}
-                    alt={titulo}
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="subtitle1" component="div" noWrap>
+                {/* Image with white background */}
+                <Box sx={{ bgcolor: 'white', p: 1 }}>
+                    <CardMedia
+                        component="img"
+                        image={urlImagen}
+                        alt={titulo}
+                        sx={{
+                            height: { xs: 140, md: 180 },
+                            objectFit: 'contain',
+                        }}
+                    />
+                </Box>
+
+                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 1.5, '&:last-child': { pb: 1.5 } }}>
+                    <Typography
+                        variant="body2"
+                        fontWeight={500}
+                        sx={{
+                            mb: 1,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            lineHeight: 1.3,
+                            minHeight: '2.6em',
+                        }}
+                    >
                         {titulo}
                     </Typography>
-                    <Box display="flex" alignItems="center" gap={1}>
-                        <Typography variant="body1" color="text.primary" fontWeight="bold">
-                            ${precioOferta?.toFixed(2)} MXN
+
+                    <Box>
+                        <Typography variant="h6" fontWeight={800} sx={{ lineHeight: 1.2, fontSize: { xs: '1rem', md: '1.15rem' } }}>
+                            ${precioOferta?.toFixed(2)}
                         </Typography>
                         {descuento > 0 && (
-                            <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                ${precioOriginal?.toFixed(2)} MXN
-                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.3 }}>
+                                <Typography variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
+                                    ${precioOriginal?.toFixed(2)}
+                                </Typography>
+                                {ahorro > 0 && (
+                                    <Typography variant="caption" sx={{ color: '#B4E50D', fontWeight: 600 }}>
+                                        Ahorras ${ahorro.toFixed(0)}
+                                    </Typography>
+                                )}
+                            </Box>
                         )}
                     </Box>
-
                 </CardContent>
             </Card>
         </Link>

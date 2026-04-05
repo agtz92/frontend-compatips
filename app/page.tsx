@@ -9,8 +9,11 @@ import {
   Button,
   Box,
   Paper,
+  Chip,
 } from '@mui/material'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useState, useEffect } from 'react'
 import ProductCard from './components/ProductCard'
 import FilterBar from './components/FilterBar'
@@ -32,7 +35,6 @@ export default function HomePage() {
     },
   })
 
-  // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
   }, [categoriaSeleccionada, searchTerm])
@@ -59,47 +61,119 @@ export default function HomePage() {
   const hasMore = visibleCount < allProducts.length
 
   return (
-    <Container sx={{ py: 5 }}>
-      <LoadingBackdrop open={loading} />
-
-      <Typography variant="h4" gutterBottom>
-        🔥🔥🔥 Productos en Oferta en Amazon 🔥🔥🔥
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Encuentra los últimos productos escondidos en oferta en Amazon México listados aquí!
-      </Typography>
-
-      <FilterBar
-        categoria={categoriaSeleccionada}
-        onCategoriaChange={setCategoriaSeleccionada}
-        search={searchTerm}
-        onSearchChange={setSearchTerm}
-      />
-
-      <Grid container spacing={2}>
-        {visibleProducts.map((p: any) => (
-          <Grid key={p.id} size={{ xs: 12, md: 3 }}>
-            <ProductCard
-              id={p.id}
-              titulo={p.titulo}
-              urlImagen={p.urlImagen}
-              precioOferta={p.precioOferta}
-              precioOriginal={p.precioOriginal}
-              descuento={p.descuento}
-              esReciente={p.esReciente}
+    <>
+      {/* Hero Section */}
+      <Box
+        sx={{
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+          py: { xs: 4, md: 6 },
+          px: 2,
+          mb: 4,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center' }}>
+            <Chip
+              icon={<LocalOfferIcon />}
+              label="Ofertas actualizadas diariamente"
+              sx={{
+                mb: 2,
+                bgcolor: 'rgba(180, 229, 13, 0.15)',
+                color: '#B4E50D',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+              }}
             />
-          </Grid>
-        ))}
-        {allProducts.length === 0 && !loading && <NoOfertas />}
-      </Grid>
+            <Typography
+              variant="h3"
+              fontWeight={800}
+              sx={{
+                color: 'white',
+                mb: 1,
+                fontSize: { xs: '1.75rem', md: '2.5rem' },
+              }}
+            >
+              Ofertas en Amazon México
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ color: 'rgba(255,255,255,0.7)', mb: 3, maxWidth: 500, mx: 'auto' }}
+            >
+              Encuentra los mejores productos escondidos en oferta. Descuentos verificados y actualizados.
+            </Typography>
+            {allProducts.length > 0 && (
+              <Chip
+                label={`${allProducts.length} ofertas disponibles`}
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.1)',
+                  color: 'rgba(255,255,255,0.8)',
+                  fontWeight: 500,
+                }}
+              />
+            )}
+          </Box>
+        </Container>
+      </Box>
 
-      {hasMore && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Button variant="contained" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
-            Ver más
-          </Button>
-        </Box>
-      )}
-    </Container>
+      <Container maxWidth="lg" sx={{ pb: 6 }}>
+        <LoadingBackdrop open={loading} />
+
+        <FilterBar
+          categoria={categoriaSeleccionada}
+          onCategoriaChange={setCategoriaSeleccionada}
+          search={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
+
+        {/* Results count */}
+        {!loading && allProducts.length > 0 && (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Mostrando {visibleProducts.length} de {allProducts.length} ofertas
+            {categoriaSeleccionada && <> en <strong>{categoriaSeleccionada}</strong></>}
+            {searchTerm && <> para &quot;{searchTerm}&quot;</>}
+          </Typography>
+        )}
+
+        <Grid container spacing={2}>
+          {visibleProducts.map((p: any) => (
+            <Grid key={p.id} size={{ xs: 6, sm: 6, md: 3 }}>
+              <ProductCard
+                id={p.id}
+                titulo={p.titulo}
+                urlImagen={p.urlImagen}
+                precioOferta={p.precioOferta}
+                precioOriginal={p.precioOriginal}
+                descuento={p.descuento}
+                esReciente={p.esReciente}
+              />
+            </Grid>
+          ))}
+          {allProducts.length === 0 && !loading && <NoOfertas />}
+        </Grid>
+
+        {hasMore && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+              endIcon={<ExpandMoreIcon />}
+              sx={{
+                borderColor: '#B4E50D',
+                color: '#B4E50D',
+                fontWeight: 600,
+                px: 4,
+                py: 1.2,
+                borderRadius: 2,
+                textTransform: 'none',
+                fontSize: '1rem',
+                '&:hover': { borderColor: '#9ac40b', bgcolor: 'rgba(180, 229, 13, 0.08)' },
+              }}
+            >
+              Ver más ofertas
+            </Button>
+          </Box>
+        )}
+      </Container>
+    </>
   )
 }
