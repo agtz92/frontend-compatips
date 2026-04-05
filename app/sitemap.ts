@@ -5,7 +5,7 @@ const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:800
 
 const ALL_PRODUCTS_QUERY = `
   query {
-    productosFiltrados(ordenarPor: "-id") {
+    productos {
       id
     }
   }
@@ -20,7 +20,7 @@ async function fetchAllProductIds(): Promise<string[]> {
       next: { revalidate: 300 },
     })
     const json = await res.json()
-    return (json.data?.productosFiltrados ?? []).map((p: { id: string }) => p.id)
+    return (json.data?.productos ?? []).map((p: { id: string }) => p.id)
   } catch {
     return []
   }
