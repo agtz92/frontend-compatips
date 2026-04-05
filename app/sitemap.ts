@@ -17,7 +17,7 @@ async function fetchAllProductIds(): Promise<string[]> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: ALL_PRODUCTS_QUERY }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     })
     const json = await res.json()
     return (json.data?.productosFiltrados ?? []).map((p: { id: string }) => p.id)
