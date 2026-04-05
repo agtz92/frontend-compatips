@@ -56,12 +56,7 @@ export default function ProductoDetalleClient({ id }: { id: string }) {
         <ProductoCard producto={p} />
       ) : (
         <>
-          <OfertaExpirada
-            titulo={p.titulo}
-            urlImagen={p.urlImagen}
-            linkReferidos={p.linkReferidos}
-            precioOferta={p.precioOferta}
-          />
+          <OfertaExpirada producto={p} />
           <ProductosRelacionados categoria={p.categoria} />
         </>
       )}
