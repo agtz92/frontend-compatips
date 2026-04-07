@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import Providers from './providers'
 import ResponsiveNavbar from './components/ResponsiveNavbar'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   title: {
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="es">
       <body>
         <Providers><MuiThemeProvider><ResponsiveNavbar />{children}</MuiThemeProvider></Providers>
+        <Analytics />
       </body>
     </html>
   )
