@@ -1,7 +1,22 @@
-'use client'
-
+import type { Metadata } from 'next'
 import { Container, Typography, Button, Box } from '@mui/material'
 import TelegramIcon from '@mui/icons-material/Telegram'
+
+const SITE_URL = 'https://www.compatips.com'
+
+export const metadata: Metadata = {
+  title: 'Únete al canal de Telegram',
+  description:
+    'Únete al canal de Telegram @ofertasperronas y recibe las mejores ofertas escondidas de Amazon México todos los días.',
+  alternates: { canonical: `${SITE_URL}/telegram` },
+  openGraph: {
+    title: 'Únete al canal de Telegram | Compatips',
+    description:
+      'Recibe las mejores ofertas de Amazon México en tu celular. Canal exclusivo con descuentos actualizados diariamente.',
+    url: `${SITE_URL}/telegram`,
+    type: 'website',
+  },
+}
 
 export default function TelegramInvitePage() {
   return (
@@ -29,9 +44,9 @@ export default function TelegramInvitePage() {
           color="primary"
           size="large"
           startIcon={<TelegramIcon />}
-          onClick={() =>
-            window.open('https://t.me/ofertasperronas', '_blank')
-          }
+          href="https://t.me/ofertasperronas"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           Unirme al canal
         </Button>
@@ -39,7 +54,7 @@ export default function TelegramInvitePage() {
       <Typography variant="body1" sx={{ mt: 4 }}>
        O búscanos en canales de telegram como @ofertasperronas OFERTAS EN AMAZON 🔥🔥🔥
       </Typography>
-      
+
     </Container>
   )
 }

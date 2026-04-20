@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import ProductoDetalleClient from './ProductoDetalleClient'
 
+const SITE_URL = 'https://www.compatips.com'
 const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:8000/graphql/'
 
 const PRODUCTO_QUERY = `
@@ -12,6 +13,8 @@ const PRODUCTO_QUERY = `
       precioOriginal
       urlImagen
       categoria
+      linkReferidos
+      fecha
     }
   }
 `
@@ -31,6 +34,13 @@ async function fetchProducto(id: string) {
   }
 }
 
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return new Date(Date.now() + days * 86400000).toISOString().split('T')[0]
+  d.setDate(d.getDate() + days)
+  return d.toISOString().split('T')[0]
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -45,14 +55,18 @@ export async function generateMetadata({
 
   const title = `${p.titulo} | Producto en oferta`
   const description = `Aprovecha ${p.descuento}% de descuento por tiempo limitado. Precio: $${p.precioOferta} MXN`
+  const canonical = `${SITE_URL}/producto/${id}`
 
   return {
     title,
     description,
+    alternates: { canonical },
     openGraph: {
       title,
       description,
       images: [p.urlImagen],
+      url: canonical,
+      type: 'website',
     },
   }
 }
@@ -65,29 +79,61 @@ export default async function ProductoDetalle({
   const { id } = await params
   const p = await fetchProducto(id)
 
-  const jsonLd = p
+  // Note: aggregateRating and review are intentionally omitted. Google
+  // prohibits self-serving review markup for content the site doesn't
+  // actually display. Compatips aggregates Amazon deals without collecting
+  // its own user reviews, so adding rating markup here would violate
+  // structured data guidelines.
+  const productUrl = `${SITE_URL}/producto/${id}`
+  const productJsonLd = p
     ? {
         '@context': 'https://schema.org',
         '@type': 'Product',
         name: p.titulo,
         image: p.urlImagen,
+        description: `Oferta de ${p.descuento}% en ${p.titulo}. Precio de oferta $${p.precioOferta} MXN, precio original $${p.precioOriginal} MXN.`,
+        sku: id,
+        url: productUrl,
         category: p.categoria,
+        brand: { '@type': 'Brand', name: 'Amazon' },
         offers: {
           '@type': 'Offer',
+          url: p.linkReferidos,
           price: p.precioOferta,
           priceCurrency: 'MXN',
+          priceValidUntil: addDays(p.fecha, 14),
           availability: 'https://schema.org/InStock',
-          discount: `${p.descuento}%`,
+          itemCondition: 'https://schema.org/NewCondition',
         },
+      }
+    : null
+
+  const breadcrumbJsonLd = p
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITE_URL },
+          ...(p.categoria
+            ? [{ '@type': 'ListItem', position: 2, name: p.categoria, item: `${SITE_URL}/?categoria=${encodeURIComponent(p.categoria)}` }]
+            : []),
+          { '@type': 'ListItem', position: p.categoria ? 3 : 2, name: p.titulo, item: productUrl },
+        ],
       }
     : null
 
   return (
     <>
-      {jsonLd && (
+      {productJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        />
+      )}
+      {breadcrumbJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       )}
       <ProductoDetalleClient id={id} />
