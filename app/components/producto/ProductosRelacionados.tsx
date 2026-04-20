@@ -2,18 +2,14 @@
 
 import { useQuery } from '@apollo/client'
 import { GET_PRODUCTOS_FILTRADOS } from '@/graphql/queries/productosFiltrados'
-import {
-    Typography,
-    Box,
-    Card,
-    CardContent,
-    CardMedia,
-    Button,
-    Grid,
-} from '@mui/material'
+import { Typography, Box, Grid, Button } from '@mui/material'
+import CategoryIcon from '@mui/icons-material/Category'
 import Link from 'next/link'
+import ProductCard from '../ProductCard'
 
-export default function ProductosRelacionados({ categoria }: { categoria: string }) {
+export default function ProductosRelacionados({ categoria }: { categoria?: string | null }) {
+    if (!categoria) return null
+
     const { loading, error, data } = useQuery(GET_PRODUCTOS_FILTRADOS, {
         variables: { categoria, ordenar_por: "-id" },
     })
@@ -24,47 +20,53 @@ export default function ProductosRelacionados({ categoria }: { categoria: string
 
     if (productosRelacionados.length === 0) return null
 
+    const hoy = new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })
+
     return (
-        <Box sx={{ mt: 6 }}>
-            <Typography variant="h6" gutterBottom>
-                Puedes ver si hay un producto similar en la categoría de {categoria}
-                
-            </Typography>
-            <Typography variant="h6" gutterBottom>O pulsa el botón para ver todas las ofertas en la categoría de {categoria}</Typography>
-            <Box textAlign="center" mt={4} mb={3}>
-                <Link href="/">
-                    <Button variant="outlined" color="primary">
-                        Ver todas las ofertas
-                    </Button>
-                </Link>
+        <Box sx={{ mt: 5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <CategoryIcon sx={{ color: '#FF9900', fontSize: 22 }} />
+                <Typography variant="h6" component="h2" fontWeight={700} sx={{ fontSize: '1.1rem' }}>
+                    Más ofertas en {categoria}
+                </Typography>
             </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Descubre los mejores descuentos en productos de {categoria} en Amazon México, actualizados al {hoy}.
+            </Typography>
 
             <Grid container spacing={2}>
                 {productosRelacionados.map((p: any) => (
-                    <Grid size={{ xs: 12, md: 3 }} key={p.id}>
-                        <Link href={`/producto/${p.id}`} style={{ textDecoration: 'none' }}>
-                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                <CardMedia
-                                    component="img"
-                                    height="160"
-                                    image={p.urlImagen}
-                                    alt={p.titulo}
-                                />
-                                <CardContent>
-                                    <Typography variant="subtitle1" fontWeight={500} noWrap>
-                                        {p.titulo}
-                                    </Typography>
-                                    <Typography variant="body2" color="primary">
-                                        ${p.precioOferta.toFixed(2)}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Link>
+                    <Grid size={{ xs: 6, sm: 6, md: 3 }} key={p.id}>
+                        <ProductCard
+                            id={p.id}
+                            titulo={p.titulo ?? ''}
+                            urlImagen={p.urlImagen ?? ''}
+                            precioOferta={p.precioOferta ?? 0}
+                            precioOriginal={p.precioOriginal ?? 0}
+                            descuento={p.descuento ?? 0}
+                            esReciente={p.esReciente ?? false}
+                        />
                     </Grid>
                 ))}
             </Grid>
 
-
+            <Box textAlign="center" mt={3}>
+                <Link href={`/?categoria=${encodeURIComponent(categoria)}`}>
+                    <Button
+                        variant="outlined"
+                        sx={{
+                            borderColor: '#FF9900',
+                            color: '#FF9900',
+                            fontWeight: 600,
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            '&:hover': { borderColor: '#E68A00', bgcolor: 'rgba(255, 153, 0, 0.08)' },
+                        }}
+                    >
+                        Ver todas las ofertas de {categoria}
+                    </Button>
+                </Link>
+            </Box>
         </Box>
     )
 }

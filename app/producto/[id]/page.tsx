@@ -122,6 +122,45 @@ export default async function ProductoDetalle({
       }
     : null
 
+  const faqJsonLd = p
+    ? (() => {
+        const faqs: { q: string; a: string }[] = []
+        if (p.precioOferta != null) {
+          faqs.push({
+            q: `¿Cuánto cuesta ${p.titulo} en oferta?`,
+            a: `El precio de oferta actual es de $${Number(p.precioOferta).toFixed(2)} MXN${p.descuento != null && p.descuento > 0 ? `, con un descuento del ${p.descuento}%` : ''}${p.precioOriginal != null ? ` sobre el precio original de $${Number(p.precioOriginal).toFixed(2)} MXN` : ''}.`,
+          })
+        }
+        const ahorro = p.precioOriginal && p.precioOferta ? p.precioOriginal - p.precioOferta : null
+        if (ahorro != null && ahorro > 0) {
+          faqs.push({
+            q: '¿Cuánto ahorro con este descuento?',
+            a: `Con esta oferta ahorras $${ahorro.toFixed(2)} MXN${p.descuento != null && p.descuento > 0 ? `, lo que equivale a un ${p.descuento}% de descuento` : ''}.`,
+          })
+        }
+        if (p.fecha) {
+          const fechaExp = new Date(new Date(p.fecha).getTime() + 14 * 86400000).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })
+          faqs.push({
+            q: '¿Hasta cuándo está disponible esta oferta?',
+            a: `La disponibilidad estimada es hasta el ${fechaExp}, aunque las ofertas en Amazon pueden agotarse antes dependiendo del stock disponible.`,
+          })
+        }
+        faqs.push({
+          q: '¿Dónde puedo comprar este producto?',
+          a: 'Puedes comprar este producto directamente en Amazon México haciendo clic en el botón "Ver en Amazon" en la página del producto.',
+        })
+        return {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        }
+      })()
+    : null
+
   return (
     <>
       {productJsonLd && (
@@ -134,6 +173,12 @@ export default async function ProductoDetalle({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+      )}
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
       <ProductoDetalleClient id={id} />

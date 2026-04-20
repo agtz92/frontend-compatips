@@ -14,6 +14,8 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import ProductoCard from '@/app/components/producto/ProductoCard'
 import OfertaExpirada from '@/app/components/producto/OfertaExpirada'
 import ProductosRelacionados from '@/app/components/producto/ProductosRelacionados'
+import SobreLaOferta from '@/app/components/producto/SobreLaOferta'
+import FaqOferta from '@/app/components/producto/FaqOferta'
 import Link from 'next/link'
 
 export default function ProductoDetalleClient({ id }: { id: string }) {
@@ -55,11 +57,27 @@ export default function ProductoDetalleClient({ id }: { id: string }) {
       {p.esReciente ? (
         <ProductoCard producto={p} />
       ) : (
-        <>
-          <OfertaExpirada producto={p} />
-          <ProductosRelacionados categoria={p.categoria} />
-        </>
+        <OfertaExpirada producto={p} />
       )}
+
+      <SobreLaOferta
+        titulo={p.titulo}
+        categoria={p.categoria}
+        descuento={p.descuento}
+        precioOriginal={p.precioOriginal}
+        precioOferta={p.precioOferta}
+        fecha={p.fecha}
+      />
+
+      <FaqOferta
+        titulo={p.titulo}
+        precioOferta={p.precioOferta}
+        precioOriginal={p.precioOriginal}
+        descuento={p.descuento}
+        fecha={p.fecha}
+      />
+
+      <ProductosRelacionados categoria={p.categoria} />
     </Container>
   )
 }
