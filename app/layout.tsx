@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import Providers from './providers'
 import ResponsiveNavbar from './components/ResponsiveNavbar'
+import { Analytics } from '@vercel/analytics/next'
 
 const SITE_URL = 'https://www.compatips.com'
 
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Providers><MuiThemeProvider><ResponsiveNavbar />{children}</MuiThemeProvider></Providers>
+        <Analytics />
       </body>
     </html>
   )
